@@ -39,6 +39,20 @@ class Speed(Enum):
     SpeedPlusPlusPlus = 1.35
     SpeedPlusPlusPlusPlus = 1.45
 
+    @property
+    def description(self):
+        descriptions = {
+            Speed.SpeedMinusMinusMinus: "S---",
+            Speed.SpeedMinusMinus: "S--",
+            Speed.SpeedMinus: "S-",
+            Speed.Normal: "Normal Speed",
+            Speed.SpeedPlus: "S+",
+            Speed.SpeedPlusPlus: "S++",
+            Speed.SpeedPlusPlusPlus: "S+++",
+            Speed.SpeedPlusPlusPlusPlus: "S++++",
+        }
+        return descriptions[self]
+
 def ease_in_expo_deq_hard(acc: float, star: float):
     exponent = 100 - 12 * star
     if exponent < 5:
@@ -62,8 +76,14 @@ def calculate_rp(acc: float, star: float):
 )
 async def rp_calculator(interaction: discord.Interaction, accuracy: float, star_rating: float, speed: Speed):
     """Calculates RP you achieved from a score."""
+
+    
     try:
-        await interaction.response.send_message(str(calculate_rp(accuracy / 100, (star_rating * speed.value))) + "RP")
+        message = (
+            f"{accuracy}% {star_rating}* with {speed.description} is worth "
+            f"{calculate_rp(accuracy / 100, (star_rating * speed.value))} RP"
+        )
+        await interaction.response.send_message(message)
     except OverflowError:
         await interaction.response.send_message("Overflow Error. Please do not put in ridiculously high numbers.")
     except Exception as e:
