@@ -1,8 +1,12 @@
-from typing import Optional
 import discord
 from discord import app_commands
 import math
 from enum import Enum
+from dotenv import load_dotenv
+import os
+
+load_dotenv(".env")
+DISCORD_TOKEN: str = os.getenv("DISCORD_TOKEN")
 
 class MyClient(discord.Client):
     def __init__(self, *, intents: discord.Intents):
@@ -65,4 +69,4 @@ async def rp_calculator(interaction: discord.Interaction, accuracy: float, star_
     except Exception as e:
         await interaction.response.send_message(f"An unexpected error occured: {e}")
 
-client.run('token')
+client.run(DISCORD_TOKEN)
